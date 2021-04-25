@@ -37,11 +37,13 @@ def calculate_vector(blast, genes_to_cluster):
     return vector
 
 
+# %%
 parser = argparse.ArgumentParser(description='Predict host from phage fasta.')
 parser.add_argument('-i', '--fasta', required=True)
 parser.add_argument('-o', '--out_dir', required=True)
 args = parser.parse_args()
 
+# %%
 fasta_name = os.path.basename(args.fasta)
 
 prokka_command = '/root/prokka/bin/prokka ' \
