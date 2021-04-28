@@ -19,12 +19,15 @@ prokka                                      \
     ${fasta}                                \
     1> ${outdir}/${sample_name}.log.out     \
     2> ${outdir}/${sample_name}.log.err
-    
-makeblastdb -in 008_train.cd-hit.genes.faa -dbtype prot
+
+# create index with:
+# makeblastdb -in 008_train.cd-hit.genes.faa -dbtype prot
 
 blastp                                              \
-    -query prokka/test.faa                          \
+    -query ${outdir}/${sample_name}.faa             \
     -db data/008_train.cd-hit.genes.faa             \
-    -out prokka/test.blast                          \
+    -out ${outdir}/${sample_name}.blast             \
     -outfmt "6 qseqid sseqid score pident evalue"   \
+    -max_hsps 1	                                    \
     -max_target_seqs 1
+
