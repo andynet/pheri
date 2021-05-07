@@ -56,7 +56,7 @@ def main():
     
     prot2clstr_df = read_cluster_file(args.clusters_file)
     representation_df = create_representation(sample_id, args.matrix_file, args.blast_file, prot2clstr_df)
-    models_tsv = glob.glob("data/*.pkl")
+    models_tsv = glob.glob("data/models/*.pkl")
     representation_df.to_csv(out_vector, sep='\t')
     
     result_df = pd.DataFrame(columns=["sample_id", "infects", "host", "score"])
@@ -64,7 +64,7 @@ def main():
     
     for model in models_tsv:
         
-        model_name = model.split('.')[0].split('_')[-1]
+        model_name = model.split('.')[0].split('/')[-1]
     
         model_pkl = open(model, 'rb')
         mdl = pickle.load(model_pkl)          # type: DecisionTreeClassifier
