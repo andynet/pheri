@@ -1,0 +1,27 @@
+package:
+  name: "pheri"
+  version: "0.2"
+
+source:
+  path: /home/andy/projects/pheri_tool
+
+build:
+  noarch: generic
+  number: 0
+
+requirements:
+  run:
+    - python >=3.6
+    - prokka
+    - blast
+    - scikit-learn =0.18.0
+    - scipy <0.19
+    - pandas
+
+test:
+  commands:
+    - run.sh 
+
+about:
+  summary: Prediction of phage hosts
+
