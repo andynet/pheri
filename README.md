@@ -12,3 +12,15 @@ The whole preprocessing pipeline can be found [here](https://github.com/andynet/
 
 The paper describing the method is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2020.05.13.093773v1.full).
 
+To build the conda package:
+'''
+conda build purge
+conda build -c conda-forge -c bioconda . 1>log 2>&1
+'''
+
+
+# Install
+
+conda create -n test
+conda install -c bioconda -c conda-forge -c andynet pheri
+pheri ~/miniconda3/envs/test/data/examples/test_phages/phage0000000.fna ./test

@@ -1,14 +1,18 @@
 #!/bin/bash
 
-if [[ ${#} -ne 1 ]]; then
-    echo "Usage: ${0} <fasta>";
+if [[ ${#} -ne 2 ]]; then
+    echo "Usage: ${0} <fasta> <outdir>";
     exit 0;
 fi
 
+basedir="$(dirname ${0})/.."
+
 fasta=${1}
-outdir=$(dirname ${fasta})
-base=$(basename ${fasta})
-sample_name=${base%.*}
+tmp=$(basename ${fasta})
+sample_name=${tmp%.*}
+
+outdir=${2}
+mkdir -p ${outdir}
 
 echo -e "outdir = ${outdir} \nsample_name = ${sample_name} "
 
@@ -27,33 +31,31 @@ prokka                                      \
     1> ${outdir}/${sample_name}.log.out     \
     2> ${outdir}/${sample_name}.log.err
 
-# create index with:
-# makeblastdb -in 008_train.cd-hit.genes.faa -dbtype prot
 if [[ ! -s ${outdir}/${sample_name}.faa ]]; then
     echo "No genes were found by prokka. Exiting...";
     exit 0;
 fi
 
-
 echo "Finding clusters"
 blastp                                              \
     -query ${outdir}/${sample_name}.faa             \
-    -db "data/blastdb/train_genes.faa"              \
+    -db "${basedir}/data/blastdb/train_genes.faa"   \
     -out ${outdir}/${sample_name}.blast             \
     -outfmt "6 qseqid sseqid score pident evalue"   \
     -max_hsps 1	                                    \
-    -max_target_seqs 1
+    -max_target_seqs 1 2> /dev/null
     
 echo "Predicting host"
-python main.py    \
-    --blast_file ${outdir}/${sample_name}.blast \
-    --clusters_file data/clusters.tsv  	        \
-    --matrix_file data/features.tsv
+python ${basedir}/bin/main.py                       \
+    --blast_file ${outdir}/${sample_name}.blast     \
+    --clusters_file ${basedir}/data/clusters.tsv    \
+    --matrix_file ${basedir}/data/features.tsv      \
+    --model_dir ${basedir}/data/models/
 
 extensions=(err ffn fsa gbk gff log log.err log.out sqn tbl tsv txt);
 for ext in ${extensions[@]}; do
     rm ${outdir}/${sample_name}.${ext}
 done;
 
-echo "Finished successfully. Results are stored in ${outdir}/${sample_name}.res.tsv. \n"
+echo -e "Finished successfully. Results are stored in ${outdir}/${sample_name}.res.tsv. \n"
 

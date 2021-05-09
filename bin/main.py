@@ -43,7 +43,8 @@ def main():
     parser = argparse.ArgumentParser(description="Predict phage host.")
     parser.add_argument("--blast_file")
     parser.add_argument("--clusters_file")
-    parser.add_argument("--matrix_file")    
+    parser.add_argument("--matrix_file")
+    parser.add_argument("--model_dir")
     args = parser.parse_args()
     
     # args.blast_file = "prokka/test.blast"
@@ -56,7 +57,7 @@ def main():
     
     prot2clstr_df = read_cluster_file(args.clusters_file)
     representation_df = create_representation(sample_id, args.matrix_file, args.blast_file, prot2clstr_df)
-    models_tsv = glob.glob("data/models/*.pkl")
+    models_tsv = glob.glob(args.model_dir + "*.pkl")
     representation_df.to_csv(out_vector, sep='\t')
     
     result_df = pd.DataFrame(columns=["sample_id", "infects", "host", "score"])
@@ -64,7 +65,7 @@ def main():
     
     for model in models_tsv:
         
-        model_name = model.split('.')[0].split('/')[-1]
+        model_name = model.split('/')[-1].split('.')[0]
     
         model_pkl = open(model, 'rb')
         mdl = pickle.load(model_pkl)          # type: DecisionTreeClassifier

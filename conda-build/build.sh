@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-mkdir -p   "${PREFIX}/bin"
-mv data    "${PREFIX}/"
-mv run.sh  "${PREFIX}/bin/"
-mv main.py "${PREFIX}/bin/"
+mkdir -p          "${PREFIX}/bin"
+mv ./data        "${PREFIX}/"
+mv ./bin/pheri   "${PREFIX}/bin/"
+mv ./bin/main.py "${PREFIX}/bin/"
 

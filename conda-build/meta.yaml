@@ -12,7 +12,7 @@ build:
 requirements:
   run:
     - python >=3.6
-    - prokka
+    - prokka >=1.14
     - blast
     - scikit-learn =0.18.0
     - scipy <0.19
@@ -20,7 +20,7 @@ requirements:
 
 test:
   commands:
-    - run.sh 
+    - pheri 
 
 about:
   summary: Prediction of phage hosts
